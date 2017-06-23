@@ -7,12 +7,10 @@
 '''使用多线程'''
 import urllib2,re,requests,json,time,threading
 new_url = "http://www.chinanews.com/scroll-news/news1.html"
-msg = []        #用来存储获取到的链接及内容标题
 lock = threading.Lock()
 
 def G_code(url):
     '''获取页面源码'''
-
     user_agent = {"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36"}
     headers = {"User-Agent":user_agent}
     request = urllib2.Request(url,headers = headers)
@@ -20,8 +18,7 @@ def G_code(url):
     text = text.decode('gbk').encode('utf-8')
     return text
 def Short_Url(code):
-    '''返回时间标题新浪url信息，使用多线程同时执行'''
-
+    '用''返回时间标题新浪url信息，使多线程同时执行'''
     url_api = "https://api.weibo.com/2/short_url/shorten.json"
     payload = {
         "source":5786724301,
@@ -54,8 +51,9 @@ class News():
         return Link
     def run(self):
         '''获取新闻标题及相应的短连接'''
-        i = 1
         code = News(self.num).Get_Link()
+        global msg
+        msg = []
         threads = []        #线程列表
         title = []          #标题
         for i in range(int(self.num)):
@@ -68,12 +66,6 @@ class News():
         for i in threads:
             i.join()
         return msg
-if __name__ == "__main__":
-    print "Error，此程序仅支持被导入，使用方法如下："
-    print '''
-        使用方法：
-            import new
-            code = new.News("num")
-            code.run()
-            "num" 此参数非必须，如没有则默认拉取10条最新新闻，如需更改数量则加上此参数
-        '''
+#A=News("10")
+#print A.run()
+

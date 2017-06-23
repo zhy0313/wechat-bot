@@ -12,11 +12,12 @@ import re
 import json
 import time
 import threading
+import new_thread
 
 def Type_m(m):
     '''判断用户输入的参数'''
 
-    city_list = open('wechat_bot\china_city_list1.txt',"r").read()
+    city_list = open('E:\pycharm\wechat_bot\china_city_list1.txt',"r").read()
     new = [u"资讯",u"新闻",u"热点",u"快讯",u"身边事"]
     list = city_list.decode("utf-8")
     for i in range(len(new)):
@@ -28,6 +29,7 @@ def Type_m(m):
         return 3           #用户获取快递物流信息的状态码
     else:
         return 0            #不能识别用户所发信息的状态码
+    city_list.close()
 
 def reply_m(m):
     '''当状态码为1时，获取新闻消息'''
@@ -38,14 +40,13 @@ def reply_m(m):
         num = re.findall(pattern,m['Text'])[0]
     except IndexError:
         num = ""
-    import new_thread
     msg = new_thread.News(num).run()
+    #print len(A.run())
     txt = []
     for item in msg:
         txt.append(item.decode('utf-8'))
     itchat.send("".join(txt),m['FromUserName'])
     itchat.send(u"新闻已发送完成[困]，共发送出 %d 条\n获取新闻的格式: 新闻,新闻5\n(数字是获取新闻的数量，默认回复10条)" % len(msg),m['FromUserName'] )
-
 def reply_w(m):
     '''当状态码为2时，调用次函数来获取天气状况'''
 
@@ -84,13 +85,10 @@ def reply_k(m):
 @itchat.msg_register(itchat.content.TEXT)
 def print_content(msg):
      print u"接收到好友 %s 发来的消息 %s" % (msg['User']['NickName'],msg['Text'])
-     print msg
+     #print msg
      if Type_m(msg['Text']) == 1:
          '''当状态码为1时，给用户发送新闻信息'''
-         a1 = time.time()
          reply_m(msg)
-         a2 = time.time()
-         print "用时:",a2-a1
 
      elif Type_m(msg['Text']) == 2:
          a1 = time.time()
@@ -105,9 +103,7 @@ def print_content(msg):
      elif msg['Text'] in [u"菜单",u"功能",u"你是谁",u"你是",u"用户",u"做什么"]:
          itchat.send(u"我叫小太阳[愉快]\
                     我可以为你查询\
-                    天气情况(给我发送城市名称或者城市拼写)\
-                    快递物流信息(给我发送快递单号)\
-                    实时新闻\
+                    天气情况(给我发送城市名称或者城市拼写),快递物流信息(给我发送快递单号),实时新闻,\
                     快来试试吧[害羞]",\
                      msg['FromUserName'])
      else:
