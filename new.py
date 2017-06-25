@@ -21,10 +21,7 @@ class News():
     '''
     def __init__(self,num):
         '''num 是总共获取的新闻数量,默认为10'''
-        if  num:
-            self.num = num
-        else:
-            self.num = 10
+        self.num = num
 
     def Get_Link(self):
         '''得到标题和原始链接'''

@@ -5,19 +5,12 @@
 # @Mail     :labulaka521@live.cn
 # @FileName    : weixin.py
 
-import itchat
-import requests
-import urllib2
-import re
-import json
-import time
-import threading
-import new_thread
-
+import itchat,re,time
+import new_thread,kuaidi,weather
 def Type_m(m):
     '''判断用户输入的参数'''
 
-    city_list = open('E:\pycharm\wechat_bot\china_city_list1.txt',"r").read()
+    city_list = open('E:\pycharm\wechat_bot\city_list.txt',"r").read()
     new = [u"资讯",u"新闻",u"热点",u"快讯",u"身边事"]
     list = city_list.decode("utf-8")
     for i in range(len(new)):
@@ -34,12 +27,16 @@ def Type_m(m):
 def reply_m(m):
     '''当状态码为1时，获取新闻消息'''
 
-    itchat.send(u"正在为您查询最新的新闻[愉快]，请稍等一会",m['FromUserName'])
     try:
-        pattern = re.compile(r'[0-9]{1,2}',re.S)
+        pattern = re.compile(r'[0-9]{1,4}',re.S)
         num = re.findall(pattern,m['Text'])[0]
     except IndexError:
-        num = ""
+        num = 10
+    print num
+    if int(num) >= 100:
+        itchat.send(u"你想累死我吗[委屈]，减少点新闻数量吧[愉快]",m['FromUserName'])
+        return 1
+    itchat.send(u"正在为您查询最新的新闻[愉快]，请稍等一会",m['FromUserName'])
     msg = new_thread.News(num).run()
     #print len(A.run())
     txt = []
@@ -49,10 +46,14 @@ def reply_m(m):
     itchat.send(u"新闻已发送完成[困]，共发送出 %d 条\n获取新闻的格式: 新闻,新闻5\n(数字是获取新闻的数量，默认回复10条)" % len(msg),m['FromUserName'] )
 def reply_w(m):
     '''当状态码为2时，调用次函数来获取天气状况'''
-
+    city_list = open('E:\pycharm\wechat_bot\city_list.txt',"r").read()
+    list = city_list.decode("utf-8")
+    for i in re.split('\n',list):
+        if m['Text'] in i:
+            city_code = re.split('\t',i)[0]
+            break
     itchat.send(u"正在为您查询天气[愉快],请稍后...",m['FromUserName'])
-    import weather
-    w = weather.We(m['Text']).run()
+    w = weather.We(city_code).run()
     if w == None:
         itchat.send(u"Oh[发怒]..你输入的地址我还难以确定是哪[委屈],请输入具体的城市名称",m['FromUserName'])
         return 0
@@ -75,7 +76,6 @@ def reply_k(m):
     '''当状态码为3时，用户发来的是快递单号，返回物流信息'''
 
     itchat.send(u"正在查询物流信息[愉快],请稍后...",m['FromUserName'])
-    import kuaidi
     msg = kuaidi.Kuaidi(m['Text']).run()
     if msg== None:
         itchat.send(u"你输入的快递单号貌似是失效的[难过]你再确认一下%s是否正确"%m['Text'],m['FromUserName'])
@@ -89,7 +89,6 @@ def print_content(msg):
      if Type_m(msg['Text']) == 1:
          '''当状态码为1时，给用户发送新闻信息'''
          reply_m(msg)
-
      elif Type_m(msg['Text']) == 2:
          a1 = time.time()
          reply_w(msg)
@@ -122,11 +121,8 @@ def add_friend(msg):
          msg.user.send(u"你好呀,我叫小太阳[愉快]\
                 我可以为你查询天气情况(城市名称或者城市拼写),快递物流信息(快递单号),实时新闻,还可以回复菜单查看所有的功能\
                 快来试试吧[害羞]")
-         itchat.send(u"已经添加用户%s发来的添加好友请求" % msg['RecommendInfo']['NickName'],
-                     toUserName=u'@221318a3fefcf60e6a901e9a7a1cb85a')
+         print u"已经同意用户%s发来的添加好友请求" % msg['RecommendInfo']['NickName']
     else:
          print u"已经忽略用户%s发来的添加好友请求\n原因:没有输入指定验证消息" % msg['RecommendInfo']['NickName']
-         itchat.send(u"已经忽略用户%s发来的添加好友请求\n原因:没有输入指定验证消息" % msg['RecommendInfo']['NickName'],
-                     toUserName=u'@221318a3fefcf60e6a901e9a7a1cb85a')
 itchat.auto_login(hotReload=True)
 itchat.run()

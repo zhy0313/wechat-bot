@@ -4,15 +4,17 @@
 # @Author  : Labulaka
 # @Mail     :labulaka521@live.cn
 # @FileName    : file_test.py
-'''处理城市名称'''
 import re
-f=open("wechat_bot/china_city_list.txt","r").readlines()
-f1=open("wechat_bot/china_city_list1.txt","w")
-a= []
-for item in f:
-    b =re.split('\t',item)[9]+re.split('\t',item)[8]+"\n"
-    if b  not in a:
-        a.append(b)
-        f1.write(b)
-f1.close()
-
+# import requests
+# import urllib2
+# city_name = []
+# text = urllib2.urlopen("https://cdn.heweather.com/china-city-list.txt").readlines()
+# for i in text:
+#     if re.search('CN',i):
+#         city_name.append(re.split('\t',i)[0]+"\t"+re.split('\t',i)[9])
+# f=open("city_list.txt","w")
+# f.write('\n'.join(city_name))
+# f.close()
+city_list = []
+i = 0
+txt = open('city_list.txt').readlines()
