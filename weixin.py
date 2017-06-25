@@ -85,10 +85,12 @@ def reply_k(m):
 @itchat.msg_register(itchat.content.TEXT)
 def print_content(msg):
      print u"接收到好友 %s 发来的消息 %s" % (msg['User']['NickName'],msg['Text'])
-     #print msg
      if Type_m(msg['Text']) == 1:
          '''当状态码为1时，给用户发送新闻信息'''
+         a1 = time.time()
          reply_m(msg)
+         a2 = time.time()
+         print "用时:",a2-a1
      elif Type_m(msg['Text']) == 2:
          a1 = time.time()
          reply_w(msg)
@@ -122,7 +124,9 @@ def add_friend(msg):
                 我可以为你查询天气情况(城市名称或者城市拼写),快递物流信息(快递单号),实时新闻,还可以回复菜单查看所有的功能\
                 快来试试吧[害羞]")
          print u"已经同意用户%s发来的添加好友请求" % msg['RecommendInfo']['NickName']
+         itchat.send(u"已经同意用户%s发来的添加好友请求" % msg['RecommendInfo']['NickName'],toUserName='@adef36898cb8c50daf6951bce09f6463')
     else:
+         itchat.send(u"已经忽略用户%s发来的添加好友请求\n原因:没有输入指定验证信息" % msg['RecommendInfo']['NickName'],toUserName='@adef36898cb8c50daf6951bce09f6463')
          print u"已经忽略用户%s发来的添加好友请求\n原因:没有输入指定验证消息" % msg['RecommendInfo']['NickName']
 itchat.auto_login(hotReload=True)
 itchat.run()
