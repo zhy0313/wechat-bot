@@ -64,7 +64,7 @@ def reply_w(m):
     #发送未来两天天气预报
     fmsg = w["daily_forecast"]
     for item in range(0, 2):
-        w_txt.append(u"天气预报[转圈]\n\t\t\t时间:%s\n\t\t\t天气状况:白天:%s\t晚上:%s\n\t\t\t气温范围:%s--%s℃\n\t\t\t风力:%s\n" % \
+        w_txt.append(u"天气预报[转圈]\n\t\t\t时间:%s\n\t\t\t天气状况:白天:%s\t  晚上:%s\n\t\t\t气温范围:%s--%s℃\n\t\t\t风力:%s\n" % \
                     (fmsg[item]["date"],fmsg[item]["cond"]["txt_d"],fmsg[item]["cond"]["txt_n"], \
                      fmsg[item]["tmp"]["min"],fmsg[item]["tmp"]["max"],fmsg[item]["wind"]["sc"]))
     #print "".join(w_txt)
@@ -78,8 +78,12 @@ def reply_k(m):
     itchat.send(u"正在查询物流信息[愉快],请稍后...",m['FromUserName'])
     msg = kuaidi.Kuaidi(m['Text']).run()
     if msg== None:
-        itchat.send(u"你输入的快递单号貌似是失效的[难过]你再确认一下%s是否正确"%m['Text'],m['FromUserName'])
+        itchat.send(u"你输入的快递单号貌似我还没有收录进来的[难过]你再确认一下%s是否正确[皱眉]"%m['Text'],m['FromUserName'])
         return 0
+    # if u"签收" not in ''.join(msg):
+    #     kuaidi_again = u"\n------------------------------\n快递还未签收，当您的快递物流有更新时会为您再次发送最新最新物流信息"
+    # else:
+    #     kuaidi_again = ""
     itchat.send("\n".join(msg),m['FromUserName'])
 
 @itchat.msg_register(itchat.content.TEXT)
