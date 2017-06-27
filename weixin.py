@@ -65,10 +65,8 @@ def reply_w(m):
         w_txt.append(u"天气预报[转圈]\n\t\t\t时间:%s\n\t\t\t天气状况:白天:%s\t  晚上:%s\n\t\t\t气温范围:%s--%s℃\n\t\t\t风力:%s\n" % \
                     (fmsg[item]["date"],fmsg[item]["cond"]["txt_d"],fmsg[item]["cond"]["txt_n"], \
                      fmsg[item]["tmp"]["min"],fmsg[item]["tmp"]["max"],fmsg[item]["wind"]["sc"]))
-    #print "".join(w_txt)
     itchat.send("".join(w_txt),m['FromUserName'])
     itchat.send(u"%s的天气情况已经发送完成[困]"%(w['basic']['city']),m['FromUserName'])
-    print(u"给好友 %s 发送 %s 的天气状况已成功发送"%(m['User']['NickName'],w['basic']['city']))
 
 def reply_k(m):
     '''当状态码为3时，用户发来的是快递单号，返回物流信息'''
@@ -86,37 +84,26 @@ def reply_k(m):
 
 @itchat.msg_register(itchat.content.TEXT)
 def print_content(msg):
-     print("接收到好友 %s 发来的消息 %s" % (msg['User']['NickName'],msg['Text']))
-     if Type_m(msg['Text']) == 1:
+    if Type_m(msg['Text']) == 1:
          '''当状态码为1时，给用户发送新闻信息'''
-         a1 = time.time()
          reply_m(msg)
-         a2 = time.time()
-         print(u"用时:",a2-a1)
-     elif Type_m(msg['Text']) == 2: 
-         a1 = time.time()
+    elif Type_m(msg['Text']) == 2: 
          reply_w(msg)
-         a2 = time.time()
-         print(u"用时:",a2-a1)
-     elif Type_m(msg['Text']) == 3:
-         a1 = time.time()
+    elif Type_m(msg['Text']) == 3:
          reply_k(msg)
-         a2 = time.time()
-         print(u"用时:",a2-a1)
-     elif msg['Text'] in [u"菜单",u"功能",u"你是谁",u"你是",u"用户",u"做什么"]:
+    elif msg['Text'] in [u"菜单",u"功能",u"你是谁",u"你是",u"用户",u"做什么"]:
          itchat.send(u"我叫小太阳[愉快]\
                     我可以为你查询\
                     天气情况(给我发送城市名称或者城市拼写),快递物流信息(给我发送快递单号),实时新闻,\
                     快来试试吧[害羞]",\
                      msg['FromUserName'])
-     else:
+    else:
          itchat.send(u"因为我有个笨主人[发怒]\
                     所以我还很笨[难过]\
                     还不能理解你是什么意思[委屈]\
                     现在的我只可以查询新闻,天气状况\还有快递物流信息[抠鼻]\
                     举个栗子你可以回复我:新闻5,来点新闻,西安,123456789",\
                        msg['FromUserName'])
-         print(u"给好友 %s 发送失败\n原因: 接受消息类型不能识别" %(msg['User']['NickName']))
 @itchat.msg_register(itchat.content.FRIENDS)
 def add_friend(msg):
     '''自动加好友'''
@@ -125,10 +112,8 @@ def add_friend(msg):
          msg.user.send(u"你好呀,我叫小太阳[愉快]\
                 我可以为你查询天气情况(城市名称或者城市拼写),快递物流信息(快递单号),实时新闻,还可以回复菜单查看所有的功能\
                 快来试试吧[害羞]")
-         print(u"已经同意用户%s发来的添加好友请求" % msg['RecommendInfo']['NickName'])
          itchat.send(u"已经同意用户%s发来的添加好友请求" % msg['RecommendInfo']['NickName'],toUserName='@adef36898cb8c50daf6951bce09f6463')
     else:
          itchat.send(u"已经忽略用户%s发来的添加好友请求\n原因:没有输入指定验证信息" % msg['RecommendInfo']['NickName'],toUserName='@adef36898cb8c50daf6951bce09f6463')
-         print(u"已经忽略用户%s发来的添加好友请求\n原因:没有输入指定验证消息" % msg['RecommendInfo']['NickName'])
 itchat.auto_login(hotReload=True)
 itchat.run()
