@@ -32,7 +32,6 @@ def reply_m(m):
         num = re.findall(pattern,m['Text'])[0]
     except IndexError:
         num = 10
-    print num
     if int(num) >= 100:
         itchat.send(u"你想累死我吗[委屈]，减少点新闻数量吧[愉快]",m['FromUserName'])
         return 1
