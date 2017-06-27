@@ -13,4 +13,4 @@
 基于python模块itchat
 
 **Update 2017.6.28**
-已经将运行环境跟管为python3.5[点此查看](https://github.com/labulaka521/wechat-bot/tree/wechat_bot_python3)
+已经将运行环境更换为python3.5[点此查看](https://github.com/labulaka521/wechat-bot/tree/wechat_bot_python3)
