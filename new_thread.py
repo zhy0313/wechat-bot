@@ -5,18 +5,27 @@
 # @Mail     :labulaka521@live.cn
 # @FileName    : itchat_api_news.py
 '''使用多线程'''
-import urllib2,re,requests,json,time,threading
+import re,requests,json,time,threading
 new_url = "http://www.chinanews.com/scroll-news/news1.html"
 lock = threading.Lock()
 
 def G_code(url):
     '''获取页面源码'''
-    user_agent = {"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36"}
-    headers = {"User-Agent":user_agent}
-    request = urllib2.Request(url,headers = headers)
-    text = urllib2.urlopen(request).read()
-    text = text.decode('gbk').encode('utf-8')
-    return text
+    headers = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*; q=0.8',
+    'Accept-Encoding': 'gzip,deflate,sdch',
+    'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4',
+    'Cache-Control': 'max-age=0',
+    'Connection': 'keep-alive',
+    'Host': 'www.chinanews.com',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 \
+                (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+}
+    r = requests.get(new_url, headers = headers)
+    r.encoding='gb2312'
+    return r.text
+
 def Short_Url(code):
     '用''返回时间标题新浪url信息，使多线程同时执行'''
     url_api = "https://api.weibo.com/2/short_url/shorten.json"
@@ -45,7 +54,7 @@ class News():
         Link = []
         pattern = re.compile(r'<div class="dd_bt"><a href="//(.*?)">(.*?)</a></div>.*?<div class="dd_time">(.*?)</div>',re.S)
         for item in re.findall(pattern,code):
-            if self.num > 0:
+            if int(self.num) > 0:
                 Link.append(item)
             self.num = int(self.num) - 1
         return Link
@@ -66,6 +75,6 @@ class News():
         for i in threads:
             i.join()
         return msg
-#A=News("10")
-#print A.run()
+#A=News("1")
+#print(A.run())
 

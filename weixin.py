@@ -10,9 +10,9 @@ import new_thread,kuaidi,weather
 def Type_m(m):
     '''判断用户输入的参数'''
 
-    city_list = open('E:\pycharm\wechat_bot\city_list.txt',"r").read()
+    city_list = open('/home/labulaka/python/wechat_bot/city_list.txt',"r").read()
     new = [u"资讯",u"新闻",u"热点",u"快讯",u"身边事"]
-    list = city_list.decode("utf-8")
+    list = city_list
     for i in range(len(new)):
         if new[i] in m:
             return 1        #用户获取新闻的状态码
@@ -32,22 +32,20 @@ def reply_m(m):
         num = re.findall(pattern,m['Text'])[0]
     except IndexError:
         num = 10
-    print num
     if int(num) >= 100:
         itchat.send(u"你想累死我吗[委屈]，减少点新闻数量吧[愉快]",m['FromUserName'])
         return 1
     itchat.send(u"正在为您查询最新的新闻[愉快]，请稍等一会",m['FromUserName'])
     msg = new_thread.News(num).run()
-    #print len(A.run())
     txt = []
     for item in msg:
-        txt.append(item.decode('utf-8'))
+        txt.append(item)
     itchat.send("".join(txt),m['FromUserName'])
     itchat.send(u"新闻已发送完成[困]，共发送出 %d 条\n获取新闻的格式: 新闻,新闻5\n(数字是获取新闻的数量，默认回复10条)" % len(msg),m['FromUserName'] )
 def reply_w(m):
     '''当状态码为2时，调用次函数来获取天气状况'''
-    city_list = open('E:\pycharm\wechat_bot\city_list.txt',"r").read()
-    list = city_list.decode("utf-8")
+    city_list = open('/home/labulaka/python/wechat_bot/city_list.txt',"r").read()
+    list = city_list
     for i in re.split('\n',list):
         if m['Text'] in i:
             city_code = re.split('\t',i)[0]
@@ -70,7 +68,7 @@ def reply_w(m):
     #print "".join(w_txt)
     itchat.send("".join(w_txt),m['FromUserName'])
     itchat.send(u"%s的天气情况已经发送完成[困]"%(w['basic']['city']),m['FromUserName'])
-    print u"给好友 %s 发送 %s 的天气状况已成功发送"%(m['User']['NickName'],w['basic']['city'])
+    print(u"给好友 %s 发送 %s 的天气状况已成功发送"%(m['User']['NickName'],w['basic']['city']))
 
 def reply_k(m):
     '''当状态码为3时，用户发来的是快递单号，返回物流信息'''
@@ -88,23 +86,23 @@ def reply_k(m):
 
 @itchat.msg_register(itchat.content.TEXT)
 def print_content(msg):
-     print u"接收到好友 %s 发来的消息 %s" % (msg['User']['NickName'],msg['Text'])
+     print("接收到好友 %s 发来的消息 %s" % (msg['User']['NickName'],msg['Text']))
      if Type_m(msg['Text']) == 1:
          '''当状态码为1时，给用户发送新闻信息'''
          a1 = time.time()
          reply_m(msg)
          a2 = time.time()
-         print "用时:",a2-a1
-     elif Type_m(msg['Text']) == 2:
+         print(u"用时:",a2-a1)
+     elif Type_m(msg['Text']) == 2: 
          a1 = time.time()
          reply_w(msg)
          a2 = time.time()
-         print "用时:",a2-a1
+         print(u"用时:",a2-a1)
      elif Type_m(msg['Text']) == 3:
          a1 = time.time()
          reply_k(msg)
          a2 = time.time()
-         print "用时:",a2-a1
+         print(u"用时:",a2-a1)
      elif msg['Text'] in [u"菜单",u"功能",u"你是谁",u"你是",u"用户",u"做什么"]:
          itchat.send(u"我叫小太阳[愉快]\
                     我可以为你查询\
@@ -118,7 +116,7 @@ def print_content(msg):
                     现在的我只可以查询新闻,天气状况\还有快递物流信息[抠鼻]\
                     举个栗子你可以回复我:新闻5,来点新闻,西安,123456789",\
                        msg['FromUserName'])
-         print u"给好友 %s 发送失败\n原因: 接受消息类型不能识别" %(msg['User']['NickName'])
+         print(u"给好友 %s 发送失败\n原因: 接受消息类型不能识别" %(msg['User']['NickName']))
 @itchat.msg_register(itchat.content.FRIENDS)
 def add_friend(msg):
     '''自动加好友'''
@@ -127,10 +125,10 @@ def add_friend(msg):
          msg.user.send(u"你好呀,我叫小太阳[愉快]\
                 我可以为你查询天气情况(城市名称或者城市拼写),快递物流信息(快递单号),实时新闻,还可以回复菜单查看所有的功能\
                 快来试试吧[害羞]")
-         print u"已经同意用户%s发来的添加好友请求" % msg['RecommendInfo']['NickName']
+         print(u"已经同意用户%s发来的添加好友请求" % msg['RecommendInfo']['NickName'])
          itchat.send(u"已经同意用户%s发来的添加好友请求" % msg['RecommendInfo']['NickName'],toUserName='@adef36898cb8c50daf6951bce09f6463')
     else:
          itchat.send(u"已经忽略用户%s发来的添加好友请求\n原因:没有输入指定验证信息" % msg['RecommendInfo']['NickName'],toUserName='@adef36898cb8c50daf6951bce09f6463')
-         print u"已经忽略用户%s发来的添加好友请求\n原因:没有输入指定验证消息" % msg['RecommendInfo']['NickName']
+         print(u"已经忽略用户%s发来的添加好友请求\n原因:没有输入指定验证消息" % msg['RecommendInfo']['NickName'])
 itchat.auto_login(hotReload=True)
 itchat.run()

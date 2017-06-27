@@ -15,9 +15,9 @@ class Kuaidi():
     def Sign(self,requestdata):
         '''获取数字签字 MD5 base64加密key与requestdata'''
         m = hashlib.md5()
-        RequestsData = str(requestdata)+self.key
-        m.update(RequestsData)
-        return base64.b64encode(m.hexdigest())
+        RequestsData = requestdata+self.key
+        m.update(RequestsData.encode('utf-8'))
+        return base64.b64encode(str(m.hexdigest()).encode("ascii")).decode("ascii")
     def Shipper(self):
         '''获取订单编号所属快递公司'''
         RequestData = '{"LogisticCode":"' + self.code + '"}'
@@ -58,11 +58,11 @@ class Kuaidi():
                       +text["Traces"][i]["AcceptStation"])
             return shipper
 #Get = Kuaidi("1000745320654")
-#Get.run()
+#print(Get.run())
 if __name__=="__main__":
-    print "Error,此程序只可以导入，下面是使用方法"
-    print '''
+    print("Error,此程序只可以导入，下面是使用方法")
+    print('''
         import kuaidi
         Find = kuaidi.Kuaidi("订单编号")
         Find.run()
-        '''
+        ''')
