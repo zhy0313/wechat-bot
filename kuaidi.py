@@ -57,7 +57,7 @@ class Kuaidi():
                 shipper.append(text["Traces"][i]["AcceptTime"]+"\n"\
                       +text["Traces"][i]["AcceptStation"])
             return shipper
-#Get = Kuaidi("1000745320654")
+#Get = Kuaidi("199189141248")
 #print(Get.run())
 if __name__=="__main__":
     print("Error,此程序只可以导入，下面是使用方法")

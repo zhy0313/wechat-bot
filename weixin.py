@@ -1,12 +1,16 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 # @Time    : 2017/6/20 0020 1:22
 # @Author  : Labulaka
 # @Mail     :labulaka521@live.cn
 # @FileName    : weixin.py
 
-import itchat,re,time
-import new_thread,kuaidi,weather
+import itchat
+import re
+import time
+import new_thread
+import kuaidi
+import weather
 def Type_m(m):
     '''判断用户输入的参数'''
 
@@ -85,35 +89,33 @@ def reply_k(m):
 @itchat.msg_register(itchat.content.TEXT)
 def print_content(msg):
     if Type_m(msg['Text']) == 1:
-         '''当状态码为1时，给用户发送新闻信息'''
-         reply_m(msg)
+        '''当状态码为1时，给用户发送新闻信息'''
+        reply_m(msg)
     elif Type_m(msg['Text']) == 2: 
-         reply_w(msg)
+        reply_w(msg)
     elif Type_m(msg['Text']) == 3:
-         reply_k(msg)
+        reply_k(msg)
     elif msg['Text'] in [u"菜单",u"功能",u"你是谁",u"你是",u"用户",u"做什么"]:
-         itchat.send(u"我叫小太阳[愉快]\
+        itchat.send(u"我叫小太阳[愉快]\
                     我可以为你查询\
                     天气情况(给我发送城市名称或者城市拼写),快递物流信息(给我发送快递单号),实时新闻,\
                     快来试试吧[害羞]",\
                      msg['FromUserName'])
     else:
-         itchat.send(u"因为我有个笨主人[发怒]\
+        itchat.send(u"因为我有个笨主人[发怒]\
                     所以我还很笨[难过]\
                     还不能理解你是什么意思[委屈]\
                     现在的我只可以查询新闻,天气状况\还有快递物流信息[抠鼻]\
                     举个栗子你可以回复我:新闻5,来点新闻,西安,123456789",\
-                       msg['FromUserName'])
+                    msg['FromUserName'])
 @itchat.msg_register(itchat.content.FRIENDS)
 def add_friend(msg):
     '''自动加好友'''
     if msg['RecommendInfo']['Content'] == "labulaka":
-         msg.user.verify()
-         msg.user.send(u"你好呀,我叫小太阳[愉快]\
-                我可以为你查询天气情况(城市名称或者城市拼写),快递物流信息(快递单号),实时新闻,还可以回复菜单查看所有的功能\
-                快来试试吧[害羞]")
-         itchat.send(u"已经同意用户%s发来的添加好友请求" % msg['RecommendInfo']['NickName'],toUserName='@adef36898cb8c50daf6951bce09f6463')
+        msg.user.verify()
+        msg.user.send(u"你好呀,我叫小太阳[愉快]，我可以为你查询天气情况(城市名称或者城市拼写),快递物流信息(快递单号),实时新闻,还可以回复菜单查看所有的功能")
+        itchat.send(u"已经同意用户%s发来的添加好友请求" % msg['RecommendInfo']['NickName'],toUserName='@adef36898cb8c50daf6951bce09f6463')
     else:
-         itchat.send(u"已经忽略用户%s发来的添加好友请求\n原因:没有输入指定验证信息" % msg['RecommendInfo']['NickName'],toUserName='@adef36898cb8c50daf6951bce09f6463')
+        itchat.send(u"已经忽略用户%s发来的添加好友请求\n原因:没有输入指定验证信息" % msg['RecommendInfo']['NickName'],toUserName='@adef36898cb8c50daf6951bce09f6463')
 itchat.auto_login(hotReload=True)
 itchat.run()
